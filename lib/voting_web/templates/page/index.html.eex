@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="columns is-right">
+    <div class="column is-one-fifth">
+     
+
+      <%= link "New poll", to: Routes.poll_path(@conn, :new), class: "button is-small is-primary" %>
+    </div>
+  </div>
+  <ul>
+    <%= for poll <- @polls do %>
+      <li> <%= link poll.text, to: Routes.poll_path(@conn, :show, poll.id), class: "button is-text is-small" %> </li>
+    <% end %>
+
+
+  </ul>
+</div>

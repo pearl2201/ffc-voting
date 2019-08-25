@@ -15,6 +15,11 @@ defmodule Voting.VotingSystem do
     Repo.all(Poll)
   end
 
+  def list_user_polls(user_id) do
+    query = from p in Poll, where: p.creator_id == ^user_id, select: p
+    Repo.all(query)
+  end
+
   def get_vote_count(option) do
     query = from v in Vote, where: v.option_id == ^option.id, select: count("*")
     count_votes = Repo.one(query)

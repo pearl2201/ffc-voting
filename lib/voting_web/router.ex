@@ -40,6 +40,7 @@ defmodule VotingWeb.Router do
   scope "/poll", VotingWeb do
     pipe_through [:browser, :auth, :ensure_auth]
 
+    get "/user", PageController, :user_index
     get "/new", PollController, :new
     post "/create", PollController, :create
 

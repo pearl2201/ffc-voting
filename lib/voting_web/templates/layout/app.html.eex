@@ -47,13 +47,18 @@
       <div class="navbar-end">
         <div class="navbar-item">
           <%= if @current_user do %>
+          <div class="buttons">
+           <%= link "My Polls", to: Routes.page_path(@conn, :user_index), class: "button is-small is-text" %>
           <a class="button is-dark is-small" href="/auth/logout">
             Logout
           </a>
+          </div>
           <% else %>
+          
           <a class="button is-link is-small" href="/auth/facebook">
             Login With Facebook
           </a>
+          
           <% end %>
         </div>
       </div>

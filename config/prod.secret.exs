@@ -18,7 +18,7 @@ config :voting, Voting.Repo,
   database: "voting_prod",
   pool_size: 15
 
-config voting, Voting.Repo,
+config :voting, Voting.Repo,
   ssl: true,
   url: database_url,
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")

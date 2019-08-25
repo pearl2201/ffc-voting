@@ -38,6 +38,19 @@ defmodule VotingWeb.PollChannel do
     {:noreply, socket}
   end
 
+  def handle_in("delete_vote", %{"option_id" => option_id}, socket) do
+    user = Guardian.Phoenix.Socket.current_resource(socket)
+
+    case VotingSystem.delete_vote(option_id, user.id) do
+      {:ok, vote} ->
+        broadcast!(socket, "delete_vote", %{
+          "vote" => %{"id" => vote.id, "creator_id" => vote.creator_id, "option_id" => option_id}
+        })
+    end
+
+    {:noreply, socket}
+  end
+
   def handle_in("info", %{"body" => body}, socket) do
     broadcast!(socket, "info", %{body: body})
     {:noreply, socket}

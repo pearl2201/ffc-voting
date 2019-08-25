@@ -34,8 +34,7 @@ $(document).ready(function () {
 
     console.log("new option: ");
     console.log(payload);
-    if (!voted)
-    {
+    if (!voted) {
       $(`<li id="${payload.option.id}">
       <div class="columns">
         <div class="column is-three-quarters">
@@ -49,7 +48,7 @@ $(document).ready(function () {
     </div>
     </div>
     </li>`).appendTo($("#list-option"));
-    }else {
+    } else {
       $(`<li id="${payload.option.id}">
       <div class="columns">
         <div class="column is-three-quarters">
@@ -64,30 +63,48 @@ $(document).ready(function () {
     </div>
     </li>`).appendTo($("#list-option"));
     }
-    
+
   })
 
   channel.on("new_vote", payload => {
-    /* let messageItem = document.createElement("li")
-    messageItem.innerText = `[${Date()}] ${payload.body}`
-    messagesContainer.appendChild(messageItem) */
-
-    console.log("new option: ");
-    console.log(payload);
-    console.log($(`li#${payload.vote.option_id}`));
-    console.log($(`li#${payload.vote.option_id}`).find(".vote-count"));
-    console.log(parseInt());
     $(`li#${payload.vote.option_id}`).find(".vote-count").html((parseInt($(`li#${payload.vote.option_id}`).find(".vote-count").html()) + 1).toString());
     if (payload.vote.creator_id == current_user_id) {
       voted = true;
       $(".button-vote").each(function () {
-        $(this).attr('disabled', 'disabled');
-        $(this).removeClass("button-vote");
+        if ($(this).closest("li").attr('id') != payload.vote.option_id) {
+          $(this).attr('disabled', 'disabled');
+          $(this).removeClass("button-vote");
+        } else {
+          $(this).addClass("is-warning button-unvote");
+          $(this).removeClass("button-vote");
+          $(this).html("Delete Vote");
+        }
+
+
       });
+
     }
   })
 
-  $("#btn-new-option").on("click",  function () {
+  channel.on("delete_vote", payload => {
+
+    if (payload.vote.creator_id == current_user_id) {
+      voted = false;
+    }
+
+    $(`li#${payload.vote.option_id}`).find(".vote-count").html((parseInt($(`li#${payload.vote.option_id}`).find(".vote-count").html()) - 1).toString());
+
+
+    $("li .button").each(function () {
+
+      $(this).attr('disabled', false);
+      $(this).addClass("button-vote");
+      $(this).removeClass("is-warning button-unvote");
+      $(this).html("Vote");
+    });
+  })
+
+  $("#btn-new-option").on("click", function () {
     var text = $('#option-text-input').val();
     console.log(text);
     channel.push("create_option", {
@@ -101,6 +118,17 @@ $(document).ready(function () {
       var option_id = parent.attr('id')
       console.log(option_id);
       channel.push("vote", {
+        option_id: option_id
+      })
+    }
+
+  });
+
+  $("#list-option").on("click", ".button-unvote", function () {
+    if (voted) {
+      var parent = $(this).closest("li");
+      var option_id = parent.attr('id')
+      channel.push("delete_vote", {
         option_id: option_id
       })
     }

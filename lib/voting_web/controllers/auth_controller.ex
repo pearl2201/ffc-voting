@@ -15,6 +15,7 @@ defmodule VotingWeb.AuthController do
   end
 
   def delete(conn, _params) do
+    IO.inspect("delete")
     conn
     |> put_flash(:info, "You have been logged out!")
     |> configure_session(drop: true)
@@ -22,9 +23,11 @@ defmodule VotingWeb.AuthController do
   end
 
   def logout(conn, _) do
+    IO.inspect("logout")
     conn
-    |> Guardian.Plug.sign_out(Guardian, _opts = [])
-    |> redirect(to: "/")
+    |> Guardian.Plug.sign_out(Account_Guardian, _opts = [])
+    |> redirect(to: Routes.page_path(conn, :index))
+
   end
 
   def callback(%{assigns: %{ueberauth_failure: _fails}} = conn, _params) do

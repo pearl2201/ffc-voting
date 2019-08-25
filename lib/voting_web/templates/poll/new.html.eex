@@ -1,9 +1,12 @@
 <div class="container">
-
+    <header class="poll-header">
 <h3 class="title is-3">New  Poll</h3>
+</header>
 <div class="container">
 <%= render "form.html", Map.put(assigns, :action, Routes.poll_path(@conn, :create)) %>
 </div>
-<span><%= link "Back", to: Routes.page_path(@conn, :index), class: "button is-small is-primary" %></span>
+   <footer id="back-container" class="container">
+        <%= link "Back", to: Routes.page_path(@conn, :index), class: "button is-small is-primary" %>
+        </footer>
 </div>
 

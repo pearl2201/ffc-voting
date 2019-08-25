@@ -1,68 +1,78 @@
-<div class="container">
-    <h3 class="title is-3"><span class="tag is-info">Question: </span><%= @poll.text %> </h3>
-    <div class="columns">
-      <div class="column">
-  <ul id="list-option">
-    <%= for option <- @options do %>
-    <li id="<%= option.id %>">
-      <div class="columns">
-        <div class="column is-three-quarters">
-      <p><%= option.text%></p>
-    </div>
-    <div class="column is-one-quarter">
-    <p class="vote-count"><%= option.votes %> </p>
-    </div>
-
-    <div class="column is-one-quarter">
-    <%= if @current_user == nil or (@user_option != nil) do %>
-      <div class="button is-small" disabled>Vote</div>
-      <% else %>
-      <div class="button is-small button-vote">Vote</div>
-      <% end %>
-    </div>
-    </div>
-    </li>
-    <% end %>
-  </ul>
-</div>
-<div class="column">
-
-</div>
-</div>
-
-  <form action="/poll/<%= @poll.id %>/option/create" method="POST">
-  <div class="field">
-        <label class="label">New Option</label>
-        <div class="control">
-            <input type="text" id="option-text-input" placeholder="Your option" />
+<main class="container">
+  <header class="poll-header">
+    <h3 class="title is-3"><span class="tag is-info">Question: </span>
+        <%= @poll.text %>
+    </h3>
+    </header>
+    <section class="columns" id="options-wrapper">
+        <div class="column">
+            <ul id="list-option">
+                <%= for option <- @options do %>
+                <li id="<%= option.id %>">
+                    <div class="columns">
+                        <div class="column is-three-quarters">
+                            <p>
+                                <%= option.text%>
+                            </p>
+                        </div>
+                        <div class="column is-one-quarter">
+                            <p class="vote-count">
+                                <%= option.votes %>
+                            </p>
+                        </div>
+                        <div class="column is-one-quarter">
+                            <%= cond do %>
+                            <% @current_user == nil or (@user_option != nil and @user_option.id != option.id)  -> %>
+                            <div class="button is-small" disabled>Vote</div>
+                            <% @current_user != nil and @user_option != nil and @user_option.id == option.id -> %>
+                            <div class="button is-small is-warning button-unvote">Delete Vote</div>
+                            <% true -> %>
+                            <div class="button is-small button-vote">Vote</div>
+                            <% end %>
+                        </div>
+                    </div>
+                </li>
+                <% end %>
+            </ul>
         </div>
-        
-  </div>
-  <div class="field">
-  <div class="control">
-    <div class="button is-link is-small" id="btn-new-option"> Submit </div>
-    </div>
-  </div>
-  </form>
-  <span><%= link "Back", to: Routes.page_path(@conn, :index), class: "button is-small is-primary" %></span>
-</div>
-   <script
-      type="text/javascript" defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"
-    ></script>
-<script>
-    var token = "<%= @token %>";
-    var poll_id = <%= @poll.id %>;
+        <div class="column">
+        </div>
+    </section>
     <%= if @current_user != nil do %>
-      var current_user_id = <%= @current_user.id %>;
-    <% else %>
-      var current_user_id = -1;
+    <section id="new-option-wrapper">
+    <form action="/poll/<%= @poll.id %>/option/create" method="POST">
+        <div class="field">
+            <label class="label">New Option</label>
+            <div class="control">
+                <input type="text" id="option-text-input" placeholder="Your option" />
+            </div>
+        </div>
+        <div class="field">
+            <div class="control">
+                <div class="button is-link is-small" id="btn-new-option"> Submit </div>
+            </div>
+        </div>
+    </form>
+    </section>
     <% end %>
+    <footer id="back-container" class="container">
+        <%= link "Back", to: Routes.page_path(@conn, :index), class: "button is-small is-primary" %>
+        </footer>
+          </main>
+<script type="text/javascript" defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script>
+  var token = "<%= @token %>";
+  var poll_id = <%= @poll.id %>;
+  <%= if @current_user != nil do %>
+  var current_user_id = <%= @current_user.id %>;
+  <% else %>
+  var current_user_id = -1;
+  <% end %>
 
-     <%= if @user_option != nil do %>
-      var voted = true;
-    <% else %>
-      var voted = false;
-    <% end %>
+  <%= if @user_option != nil do %>
+  var voted = true;
+  <% else %>
+  var voted = false;
+  <% end %>
 </script>
- <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/poll.js") %>"></script>
+<script type="text/javascript" src='<%= Routes.static_path(@conn, "/js/poll.js") %>'></script>

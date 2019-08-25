@@ -48,16 +48,6 @@ module.exports = (env, options) => [({
     ]
   }),
   ({
-    optimization: {
-      minimizer: [
-        new UglifyJsPlugin({
-          cache: true,
-          parallel: true,
-          sourceMap: false
-        }),
-        new OptimizeCSSAssetsPlugin({})
-      ]
-    },
     entry: {
       './js/poll.js': ['./js/poll.js'].concat(glob.sync('./vendor/**/*.js'))
     },

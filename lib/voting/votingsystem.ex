@@ -71,15 +71,24 @@ defmodule Voting.VotingSystem do
     |> Repo.insert()
   end
 
-  def create_vote(option_id,  user_id) do
+  def create_vote(option_id, user_id) do
     user = Account.get_user!(user_id)
     option = Repo.get!(Option, option_id)
 
     %Vote{}
-    |> Ecto.Changeset.change
+    |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_assoc(:creator, user)
     |> Ecto.Changeset.put_assoc(:option, option)
     |> Repo.insert()
+  end
 
+  def delete_vote(option_id, user_id) do
+    case Repo.get_by(Vote, [option_id: option_id, creator_id: user_id]) do
+      nil ->
+        {:error, :vote_not_found}
+
+      vote ->
+          Repo.delete(vote)
+    end
   end
 end

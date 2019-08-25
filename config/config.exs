@@ -40,8 +40,8 @@ config :voting, Voting.Account.Guardian,
   issuer: "voting",
   secret_key: "Nwf//bjBd8wwkhlcNag286LUyTVNv3khmGWWUbGEIp6vKP6v/DS40S+4hY1YzlHZ" # put the result of the mix command above here
 
-
+import_config "config.secret.exs"
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
-import_config "config.secret.exs"
+

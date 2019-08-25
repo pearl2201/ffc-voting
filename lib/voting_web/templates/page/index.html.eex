@@ -1,16 +1,19 @@
 <div class="container">
-  <div class="columns is-right">
+<%= if @current_user != nil do %>
+  <section class="columns is-right">
     <div class="column is-one-fifth">
      
 
       <%= link "New poll", to: Routes.poll_path(@conn, :new), class: "button is-small is-primary" %>
     </div>
-  </div>
+  </section>
+  <% end %>
+  <main id="poll-list-wrapper">
   <ul>
     <%= for poll <- @polls do %>
       <li> <%= link poll.text, to: Routes.poll_path(@conn, :show, poll.id), class: "button is-text is-small" %> </li>
     <% end %>
-
+  </main>
 
   </ul>
 </div>

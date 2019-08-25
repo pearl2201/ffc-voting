@@ -23,17 +23,18 @@ defmodule VotingWeb.Router do
 
   scope "/auth", VotingWeb do
     pipe_through [:browser,:auth]
-
+    get "/logout", AuthController, :logout
     get "/:provider", AuthController, :request
     get "/:provider/callback", AuthController, :callback
     post "/:provider/callback", AuthController, :callback
-    post "/logout", AuthController, :delete
+
   end
 
   scope "/", VotingWeb do
     pipe_through [:browser, :auth]
 
     get "/", PageController, :index
+    get "/:id", PollController, :show
   end
 
   scope "/poll", VotingWeb do
@@ -41,7 +42,7 @@ defmodule VotingWeb.Router do
 
     get "/new", PollController, :new
     post "/create", PollController, :create
-    get "/:id", PollController, :show
+
     post "/:id/option/create", PollController, :create_option
     post "/:id/option/:id", PollController, :vote_option
   end

@@ -44,3 +44,10 @@ body {
     padding-bottom: 0.5rem;
     border-bottom: 1px solid hsl(0, 0%, 86%);
 }
+
+@media screen and (max-width: 1024px)
+{
+    .container {
+        padding: .5rem .75rem;
+    }
+}

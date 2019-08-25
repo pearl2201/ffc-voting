@@ -14,7 +14,7 @@ $(document).ready(function () {
   })
 
   socket.connect()
-  console.log("connect socket");
+  
   let channel = socket.channel('poll:' + poll_id, {})
   channel.join()
     .receive("ok", resp => {
@@ -32,12 +32,11 @@ $(document).ready(function () {
     messageItem.innerText = `[${Date()}] ${payload.body}`
     messagesContainer.appendChild(messageItem) */
 
-    console.log("new option: ");
-    console.log(payload);
+
     if (!voted) {
       $(`<li id="${payload.option.id}">
       <div class="columns">
-        <div class="column is-three-quarters">
+        <div class="column is-half">
       <p>${payload.option.text}</p>
     </div>
     <div class="column is-one-quarter">
@@ -51,7 +50,7 @@ $(document).ready(function () {
     } else {
       $(`<li id="${payload.option.id}">
       <div class="columns">
-        <div class="column is-three-quarters">
+        <div class="column is-half">
       <p>${payload.option.text}</p>
     </div>
     <div class="column is-one-quarter">
@@ -63,7 +62,16 @@ $(document).ready(function () {
     </div>
     </li>`).appendTo($("#list-option"));
     }
-
+    options.push({
+      id: payload.option.id,
+      label: payload.option.text,
+      vote_count: 0
+    });
+    labels.push(payload.option.text);
+    datas.push(0);
+    chart.data.labels = labels;
+    chart.data.datasets[0].data = datas;
+    chart.update();
   })
 
   channel.on("new_vote", payload => {
@@ -84,6 +92,22 @@ $(document).ready(function () {
       });
 
     }
+    var indexFound = -1;
+    for (var i = 0; i < options.length; i++) {
+      if (options[i].id == payload.vote.option_id) {
+        indexFound = i;
+        break;
+      }
+    }
+    
+    if (indexFound != -1) {
+      
+      options[indexFound].vote_count += 1;
+      chart.data.datasets[0].data[indexFound] += 1;
+      chart.update();
+    }
+
+
   })
 
   channel.on("delete_vote", payload => {
@@ -102,6 +126,21 @@ $(document).ready(function () {
       $(this).removeClass("is-warning button-unvote");
       $(this).html("Vote");
     });
+    var indexFound = -1;
+    for (var i = 0; i < options.length; i++) {
+      if (options[i].id == payload.vote.option_id) {
+        indexFound = i;
+        break;
+      }
+    }
+    
+    if (indexFound != -1) {
+      
+      options[indexFound].vote_count -= 1;
+      chart.data.datasets[0].data[indexFound] -= 1;
+      chart.update();
+    }
+
   })
 
   $("#btn-new-option").on("click", function () {

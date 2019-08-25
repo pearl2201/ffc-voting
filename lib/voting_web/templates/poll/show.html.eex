@@ -10,17 +10,17 @@
                 <%= for option <- @options do %>
                 <li id="<%= option.id %>">
                     <div class="columns">
-                        <div class="column is-three-quarters">
+                        <div class="column is-half">
                             <p>
                                 <%= option.text%>
                             </p>
                         </div>
-                        <div class="column is-one-quarter">
+                        <div class="column is-one-quarter is-half-mobile">
                             <p class="vote-count">
                                 <%= option.votes %>
                             </p>
                         </div>
-                        <div class="column is-one-quarter">
+                        <div class="column is-one-quarter is-half-mobile">
                             <%= cond do %>
                             <% @current_user == nil or (@user_option != nil and @user_option.id != option.id)  -> %>
                             <div class="button is-small" disabled>Vote</div>
@@ -36,6 +36,7 @@
             </ul>
         </div>
         <div class="column">
+          <canvas id="myChart" width="400" height="400"></canvas>
         </div>
     </section>
     <%= if @current_user != nil do %>
@@ -59,6 +60,7 @@
         <%= link "Back", to: Routes.page_path(@conn, :index), class: "button is-small is-primary" %>
         </footer>
           </main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
 <script type="text/javascript" defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
 <script>
   var token = "<%= @token %>";
@@ -74,5 +76,150 @@
   <% else %>
   var voted = false;
   <% end %>
+
+  var options = []
+    <%= for option <- @options do %>
+      options.push({
+        label: "<%= option.text %>",
+        id: <%= option.id %>,
+        vote_count: <%= option.votes  %>
+
+      });
+
+      <% end %>
+    var labels = [];
+    var datas = [];
+    for(var i = 0; i< options.length; i++)
+    {
+      datas.push(options[i].vote_count);
+      labels.push(options[i].label);
+    }
+    var ctx = document.getElementById('myChart').getContext('2d');
+      var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'pie',
+
+    // The data for our dataset
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'My First dataset',
+            data: datas,
+            backgroundColor: [
+               'rgba(255,99,132,0.2)',
+                'rgba(54,162,235,0.2)',
+                'rgba(255,206,86,0.2)',
+                'rgba(75,192,192,0.2)',
+                'rgba(153,102,255,0.2)',
+                'rgba(255,159,64,0.2)',
+                'rgba(89,205,1,0.2)',
+                'rgba(48,245,128,0.2)',
+                'rgba(30,88,30,0.2)',
+                'rgba(58,204,126,0.2)',
+                'rgba(59,27,90,0.2)',
+                'rgba(98,41,170,0.2)',
+                'rgba(22,108,226,0.2)',
+                'rgba(34,185,17,0.2)',
+                'rgba(48,106,12,0.2)',
+                'rgba(169,227,114,0.2)',
+                'rgba(240,6,129,0.2)',
+                'rgba(198,49,222,0.2)',
+                'rgba(40,125,180,0.2)',
+                'rgba(247,229,233,0.2)',
+                'rgba(65,95,30,0.2)',
+                'rgba(15,113,168,0.2)',
+                'rgba(110,199,125,0.2)',
+                'rgba(107,196,86,0.2)',
+                'rgba(95,127,124,0.2)',
+                'rgba(208,152,252,0.2)',
+                'rgba(207,179,59,0.2)',
+                'rgba(94,210,34,0.2)',
+                'rgba(175,134,159,0.2)',
+                'rgba(82,34,223,0.2)',
+                'rgba(22,173,77,0.2)',
+                'rgba(3,58,178,0.2)',
+                'rgba(21,52,251,0.2)',
+                'rgba(247,121,176,0.2)',
+                'rgba(116,161,21,0.2)',
+                'rgba(206,101,115,0.2)',
+                'rgba(14,99,74,0.2)',
+                'rgba(178,2,72,0.2)',
+                'rgba(170,1,205,0.2)',
+                'rgba(26,146,48,0.2)',
+                'rgba(140,11,38,0.2)',
+                'rgba(75,8,72,0.2)',
+                'rgba(191,84,28,0.2)',
+                'rgba(17,49,172,0.2)',
+                'rgba(29,1,248,0.2)',
+                'rgba(238,202,43,0.2)',
+                'rgba(44,25,26,0.2)',
+                'rgba(218,65,226,0.2)',
+                'rgba(87,212,8,0.2)',
+                'rgba(247,181,206,0.2)',
+                'rgba(112,70,126,0.2)',
+                'rgba(218,175,53,0.2)',
+                'rgba(201,174,182,0.2)',
+                'rgba(51,187,117,0.2)',
+                'rgba(24,93,119,0.2)',
+                'rgba(173,200,114,0.2)',
+                'rgba(225,245,98,0.2)',
+                'rgba(194,223,64,0.2)',
+                'rgba(195,153,54,0.2)',
+                'rgba(136,93,140,0.2)',
+                'rgba(7,110,92,0.2)',
+                'rgba(58,125,10,0.2)',
+                'rgba(102,193,236,0.2)',
+                'rgba(99,213,9,0.2)',
+                'rgba(244,205,211,0.2)',
+                'rgba(73,2,224,0.2)',
+                'rgba(228,139,246,0.2)',
+                'rgba(66,218,29,0.2)',
+                'rgba(92,89,149,0.2)',
+                'rgba(22,240,194,0.2)',
+                'rgba(217,206,250,0.2)',
+                'rgba(170,229,209,0.2)',
+                'rgba(64,9,122,0.2)',
+                'rgba(36,140,245,0.2)',
+                'rgba(21,211,54,0.2)',
+                'rgba(211,157,133,0.2)',
+                'rgba(237,103,88,0.2)',
+                'rgba(106,52,104,0.2)',
+                'rgba(141,223,134,0.2)',
+                'rgba(11,92,56,0.2)',
+                'rgba(245,65,214,0.2)',
+                'rgba(180,98,36,0.2)',
+                'rgba(164,77,70,0.2)',
+                'rgba(142,201,94,0.2)',
+                'rgba(32,65,4,0.2)',
+                'rgba(173,187,241,0.2)',
+                'rgba(201,85,156,0.2)',
+                'rgba(86,61,42,0.2)',
+                'rgba(245,249,39,0.2)',
+                'rgba(163,244,211,0.2)',
+                'rgba(241,165,23,0.2)',
+                'rgba(167,48,236,0.2)',
+                'rgba(69,173,100,0.2)',
+                'rgba(82,77,241,0.2)',
+                'rgba(75,102,183,0.2)',
+                'rgba(208,191,87,0.2)',
+                'rgba(51,181,145,0.2)',
+                'rgba(93,65,92,0.2)',
+                'rgba(255,27,216,0.2)',
+                'rgba(81,33,60,0.2)',
+                'rgba(121,215,157,0.2)',
+                'rgba(221,173,65,0.2)',
+                'rgba(61,208,147,0.2)',
+                'rgba(106,129,118,0.2)',
+                'rgba(147,17,123,0.2)',
+                'rgba(202,1,96,0.2)',
+            ],
+        }]
+    },
+
+    // Configuration options go here
+    options: {
+                responsive: false
+            }
+});
 </script>
 <script type="text/javascript" src='<%= Routes.static_path(@conn, "/js/poll.js") %>'></script>

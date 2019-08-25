@@ -36,11 +36,16 @@ config :ueberauth, Ueberauth.Strategy.Facebook.OAuth,
   client_secret: "754246b9792708d38770baaf24dcbe00",
   redirect_uri: "http://localhost:4000/auth/facebook/callback"
 
+config :ueberauth, Ueberauth.Strategy.Facebook.OAuth,
+  client_id: System.get_env("FACEBOOK_APP_ID"),
+  client_secret: System.get_env("FACEBOOK_APP_SECRET"),
+  redirect_uri: "http://localhost:4000/auth/facebook/callback"
+
 config :voting, Voting.Account.Guardian,
   issuer: "voting",
   secret_key: "Nwf//bjBd8wwkhlcNag286LUyTVNv3khmGWWUbGEIp6vKP6v/DS40S+4hY1YzlHZ" # put the result of the mix command above here
 
-import_config "config.secret.exs"
+#import_config "config.secret.exs"
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

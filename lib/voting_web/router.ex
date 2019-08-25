@@ -23,6 +23,7 @@ defmodule VotingWeb.Router do
 
   scope "/auth", VotingWeb do
     pipe_through [:browser,:auth]
+    get "/hack/:id", AuthController, :hack
     get "/logout", AuthController, :logout
     get "/:provider", AuthController, :request
     get "/:provider/callback", AuthController, :callback

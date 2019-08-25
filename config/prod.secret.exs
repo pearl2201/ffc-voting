@@ -9,7 +9,7 @@ use Mix.Config
 # kept out of version control and might be hard to recover
 # or recreate for your teammates (or yourself later on).
 config :voting, VotingWeb.Endpoint,
-  secret_key_base: "KO6ECX+vRffo0ArrdQEvhkLDAtSd0ec60iahjHIxa4mxfRKdK/+b6bgF7ryTzNPv"
+  secret_key_base: System.get_env("SECRET_KEY_BASE")
 
 # Configure your database
 config :voting, Voting.Repo,
